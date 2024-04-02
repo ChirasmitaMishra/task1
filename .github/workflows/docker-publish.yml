@@ -24,28 +24,24 @@ jobs:
   push-to-ecr: 
      runs-on: self-hosted
      steps:
-       
-     - uses: aws-actions/configure-aws-credentials@v1
+    
+     - name: Configure AWS Credentials
+       uses: aws-actions/configure-aws-credentials@v1
        with:
-         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         aws-region: us-west-2
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
 
-     - name: Login to Amazon ECR
+   
+     - name: Log in to Amazon ECR
        id: login-ecr
        uses: aws-actions/amazon-ecr-login@v1
 
-    
-       env:
-        GIT_AUTHOR_NAME: github-actions
-        GIT_AUTHOR_EMAIL: github-actions@github.com
-
-     - name: Build, Push the Image to Amazon ECR
-       id: build-image
+     - name: Build, tag, and push image to Amazon ECR
        env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: self-hosted-ecr
-        
+        ECR_REPOSITORY: reponame
+        IMAGE_TAG: ${{ github.sha }}
        run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
