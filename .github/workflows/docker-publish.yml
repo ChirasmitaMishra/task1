@@ -10,7 +10,8 @@ on:
        - main
        - develop
 jobs:
-  push-to-dockerhub-staging-env: 
+  push-to-dockerhub-staging-env:  
+     if: github.ref == 'refs/heads/develop'
      runs-on: self-hosted
      environment: staging
      steps:
@@ -28,6 +29,7 @@ jobs:
           run: docker push ${{secrets.DOCKER_USERNAME}}/task1:latest
 
   push-to-ecr-staging-env: 
+     if: github.ref == 'refs/heads/develop'
      runs-on: self-hosted
      environment: staging
      steps:
@@ -55,6 +57,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   push-to-dockerhub-production-env: 
+     if: github.ref == 'refs/heads/main'
      runs-on: self-hosted
      environment: production
      steps:
@@ -71,6 +74,7 @@ jobs:
         - name: Push docker image to Docker hub
           run: docker push ${{secrets.DOCKER_USERNAME}}/task1:latest
   push-to-ecr-production-env: 
+     if: github.ref == 'refs/heads/main'
      runs-on: self-hosted
      environment: production
      steps:
