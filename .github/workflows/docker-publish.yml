@@ -56,7 +56,7 @@ jobs:
 
   push-to-dockerhub-production-env: 
      runs-on: self-hosted
-     environment: staging
+     environment: production
      steps:
         - uses: actions/checkout@v3
         - name: Run a one-line script
@@ -72,7 +72,7 @@ jobs:
           run: docker push ${{secrets.DOCKER_USERNAME}}/task1:latest
   push-to-ecr-production-env: 
      runs-on: self-hosted
-     environment: staging
+     environment: production
      steps:
     
      - name: Configure AWS Credentials
